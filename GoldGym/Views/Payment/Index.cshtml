@@ -1,0 +1,69 @@
+﻿@model GoldGym.Models.CustomerPaymentViewModel
+@{
+    ViewData["Title"] = "Gold";
+}
+
+<h1>Gym Members</h1>
+
+<p>
+    <a asp-controller="Customer" asp-action="Create">Create New Member</a>
+</p>
+<table class="table" id="dtExample">
+    <thead>
+        <tr>
+            @*<th></th>*@
+            <th>Name </th>
+            <th>Mobile1</th>
+            <th>Mobile2</th>
+            <th>Email</th>
+            <th>End Date</th>
+            <th>Plan expiring in days</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int rowNum = 1;
+            foreach (var customer in Model.Customers)
+            {
+                var payment = Model.Payments.OrderByDescending(x => x.ToDate).FirstOrDefault(x => x.CustomerId == customer.Id);
+                var toDate = payment?.ToDate == null ? "-" : payment.ToDate.Value.Date.ToString();
+                var expDays = payment?.ToDate == null ? 0 : (payment.ToDate.Value.Date - DateTime.Now.Date).TotalDays;
+                <tr>                    
+                    <td>
+                        @Html.DisplayFor(modelItem => customer.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => customer.Mobile1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => customer.Mobile2)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => customer.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => toDate)
+                    </td>
+                    <td>
+                        @(expDays > 0 ? expDays : 0)
+                    </td>
+                    <td>
+                        <a asp-action="Create" asp-controller="Payment" asp-route-id="@customer.Id" class="btn btn-info btn-sm"><img class="svg-icon" src="~/svg/icons8-dollar-30.png" /></a>
+                    </td>
+                </tr>
+                //rowNum++;
+            }
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#dtExample').DataTable({
+                order: [[5, 'desc']]
+            });
+        });
+    </script>
+    }

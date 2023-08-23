@@ -1,0 +1,18 @@
+﻿CREATE TABLE [gold].[Customer]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [Name] VARCHAR(MAX) NULL, 
+    [DOB] DATETIME2 NULL, 
+    [Gender] CHAR(10) NULL, 
+    [Address] VARCHAR(MAX) NULL, 
+    [City] VARCHAR(MAX) NULL, 
+    [Pincode] VARCHAR(10) NULL, 
+    [Mobile1] VARCHAR(20) NULL, 
+    [Mobile2] VARCHAR(20) NULL, 
+    [Email] VARCHAR(MAX) NULL,
+    [IsActive] bit NULL,
+    [CreatedOn] DATETIME2 NULL DEFAULT SYSUTCDATETIME(),
+    [CreatedBy] UNIQUEIDENTIFIER NULL,
+    [UpdatedOn] DATETIME2 NULL,
+    [UpdatedBy] UNIQUEIDENTIFIER NULL
+)

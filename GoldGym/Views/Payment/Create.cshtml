@@ -1,0 +1,155 @@
+﻿@model GoldGym.Models.Payment
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div>
+    <h4>Customer Details</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.Name)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Customer.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.DOB)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Customer.DOB)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.Gender)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Customer.Gender)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.Address)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Customer.Address)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.City)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Customer.City)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.Pincode)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Customer.Pincode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.Mobile1)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Customer.Mobile1)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.Mobile2)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Customer.Mobile2)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.Email)
+        </dt>
+        <dd class="col-sm-4">
+            @Html.DisplayFor(model => model.Customer.Email)
+        </dd>
+    </dl>
+</div>
+
+<h4>Add Payment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <input type="hidden" asp-for="CustomerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row col-md-12">
+                <div class="form-group col-md-3">
+                    <label asp-for="Amount" class="control-label"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="FromDate" class="control-label"></label>
+                    <input asp-for="FromDate" class="form-control" />
+                    <span asp-validation-for="FromDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="ToDate" class="control-label"></label>
+                    <input asp-for="ToDate" class="form-control" />
+                    <span asp-validation-for="ToDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3 pt-25">
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                    <a type="button" asp-action="create" asp-route-id="@Model.CustomerId" class="btn btn-danger">Clear</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="paymentDiv" class="pt-3">
+    <h4>Payments</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table" id="dtExample">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>@Html.DisplayNameFor(model => model.PaymentDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.FromDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.ToDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.Amount)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int rowId = 1;
+                        foreach (var item in (List<Payment>)ViewBag.Payments)
+                        {
+                            <tr>
+                                <td>@rowId</td>
+                                <td>@Html.DisplayFor(modelItem => item.PaymentDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FromDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ToDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                                <td>
+                                    @using (Html.BeginForm("Delete", "Payment", new { id = item.Id, customerId = item.CustomerId }, FormMethod.Post, true,
+                            new { onsubmit = "return confirm('Are you sure you wish to delete payment - " + item.Amount + "?');" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.HiddenFor(model => item.Id)
+                                        <button type="submit" class="btn btn-danger btn-sm" value="Delete"><img class="svg-icon" src="~/svg/trash-solid.svg" /></button>
+                                    }
+                                </td>
+                            </tr>
+                            rowId++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        //$(document).ready(function () {
+        //    $('#dtExample').DataTable();
+        //});
+    </script>
+}
