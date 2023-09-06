@@ -34,6 +34,12 @@
         public async Task<IList<T>> GetById<T>(string query, DynamicParameters parameters,
             CommandType commandType = CommandType.StoredProcedure)
         {
+            return await QueryAsync<T>(query, parameters, commandType);
+        }
+
+        public async Task<IList<T>> QueryAsync<T>(string query, DynamicParameters parameters,
+            CommandType commandType = CommandType.StoredProcedure)
+        {
             try
             {
                 using var conn = await GetOpenSqlConnectionAsync();
@@ -46,6 +52,7 @@
                 throw;
             }
         }
+
 
         public async Task<bool> ExecuteQueryAsync(string query, DynamicParameters parameters,
             CommandType commandType = CommandType.StoredProcedure)

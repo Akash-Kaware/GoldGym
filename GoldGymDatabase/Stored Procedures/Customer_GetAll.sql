@@ -18,4 +18,6 @@ AS BEGIN
         [UpdatedOn]
     FROM 
         [gold].[Customer]
+    WHERE 
+        [IsActive] = 1
 END

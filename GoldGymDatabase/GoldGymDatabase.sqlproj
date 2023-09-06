@@ -75,6 +75,14 @@
     <Build Include="Stored Procedures\Payment_GetByCustomerId.sql" />
     <Build Include="Stored Procedures\Payment_Delete.sql" />
     <Build Include="Stored Procedures\Customer_ExpiringPkg.sql" />
+    <Build Include="Table\User.sql" />
+    <Build Include="Stored Procedures\User_Create.sql" />
+    <Build Include="Stored Procedures\User_Update.sql" />
+    <Build Include="Stored Procedures\User_GetAll.sql" />
+    <Build Include="Stored Procedures\User_GetById.sql" />
+    <Build Include="Stored Procedures\User_Delete.sql" />
+    <Build Include="Stored Procedures\User_GetByEmailPassword.sql" />
+    <Build Include="Stored Procedures\User_GetByEmail.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="GoldGymDatabase.refactorlog" />

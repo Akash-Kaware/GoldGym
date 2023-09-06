@@ -1,7 +1,11 @@
-﻿@model IEnumerable<GoldGym.Models.Customer>
+﻿@using System.Security.Claims;
+@using GoldGym.Data;
+@model IEnumerable<GoldGym.Models.Customer>
 
 @{
     ViewData["Title"] = "Index";
+    var isAdmin = User.Claims.Any() ? User.Claims.Any(x => x.Type == ClaimTypes.Role && (x.Value == UserRole.Admin.ToString() || 
+                            x.Value == UserRole.MasterAdmin.ToString())) : false;
 }
 
 <h1>Customers</h1>
@@ -21,14 +25,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.Gender)
             </th>
-           @* <th>
-                @Html.DisplayNameFor(model => model.Address)
+            @* <th>
+            @Html.DisplayNameFor(model => model.Address)
             </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.City)
             </th>
             @*<th>
-                @Html.DisplayNameFor(model => model.Pincode)
+            @Html.DisplayNameFor(model => model.Pincode)
             </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Mobile1)
@@ -40,7 +44,10 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th></th>
-            <th></th>
+            @if (isAdmin)
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -56,15 +63,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Gender)
                 </td>
-               @* <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>*@
+                @* <td>
+            @Html.DisplayFor(modelItem => item.Address)
+            </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.City)
                 </td>
                 @*<td>
-                    @Html.DisplayFor(modelItem => item.Pincode)
-                </td>*@
+            @Html.DisplayFor(modelItem => item.Pincode)
+            </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Mobile1)
                 </td>
@@ -77,17 +84,20 @@
                 <td>
                     <a asp-action="Create" asp-controller="Payment" asp-route-id="@item.Id" class="btn btn-info btn-sm"><img class="svg-icon" src="~/svg/icons8-dollar-30.png" /></a> |
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info btn-sm"><img class="svg-icon" src="~/svg/pen-to-square-solid.svg" /></a> |
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm"><img class="svg-icon" src="~/svg/eye-solid.svg" /></a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm"><img class="svg-icon" src="~/svg/eye-solid.svg" /></a> 
                 </td>
-                <td>
-                    @using (Html.BeginForm("Delete", "Customer", new { id = item.Id }, FormMethod.Post, true,
-                   new { onsubmit = "return confirm('Are you sure you wish to delete " + item.Name + " details?');" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.HiddenFor(model => item.Id)
-                        <button type="submit" class="btn btn-danger btn-sm" value="Delete"><img class="svg-icon" src="~/svg/trash-solid.svg" /></button>
-                    }
-                </td>
+                @if (isAdmin)
+                {
+                    <td>
+                        @using (Html.BeginForm("Delete", "Customer", new { id = item.Id }, FormMethod.Post, true,
+                       new { onsubmit = "return confirm('Are you sure you wish to delete " + item.Name + " details?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => item.Id)
+                            <button type="submit" class="btn btn-danger btn-sm" value="Delete"><img class="svg-icon" src="~/svg/trash-solid.svg" /></button>
+                        }
+                    </td>
+                }
             </tr>
         }
     </tbody>

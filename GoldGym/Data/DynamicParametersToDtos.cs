@@ -18,7 +18,6 @@
             parameters.Add("Mobile1", customer.Mobile1);
             parameters.Add("Mobile2", customer.Mobile2);
             parameters.Add("Email", customer.Email);
-            parameters.Add("IsActive", customer.IsActive);
             return parameters;
         }
 
@@ -31,6 +30,23 @@
             parameters.Add("FromDate", payment.FromDate);
             parameters.Add("ToDate", payment.ToDate);
             parameters.Add("Amount", payment.Amount);
+            return parameters;
+        }
+
+        public static DynamicParameters ToDynamicParameters(this UserModel user)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", user.Id);
+            parameters.Add("Name", user.Name);
+            parameters.Add("DOB", user.DOB);
+            parameters.Add("Gender", user.Gender);
+            parameters.Add("Address", user.Address);
+            parameters.Add("City", user.City);
+            parameters.Add("Pincode", user.Pincode);
+            parameters.Add("Mobile1", user.Mobile1);
+            parameters.Add("Mobile2", user.Mobile2);
+            parameters.Add("Email", user.Email);
+            parameters.Add("Role", user.Role);
             return parameters;
         }
     }

@@ -1,12 +1,11 @@
-﻿CREATE PROCEDURE [gold].[Customer_Delete]
+﻿CREATE PROCEDURE [gold].[User_Delete]
 (
     @Id UNIQUEIDENTIFIER,
 	@UpdatedBy UNIQUEIDENTIFIER
 )
 AS BEGIN
---SET NOCOUNT ON
 	UPDATE 
-		[gold].[Customer]
+		[gold].[User]
 	SET
 		[IsActive] = 0,
 		[UpdatedBy] = @UpdatedBy,

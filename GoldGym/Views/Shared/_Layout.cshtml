@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+@using GoldGym.Data;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,16 +21,49 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="Index">Home</a>
-                        </li>
-                        @*<li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>*@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Index">Customer</a>
-                        </li>
+                    @{
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            var isAdmin = User.Claims.Any() ? User.Claims.Any(x => x.Type == ClaimTypes.Role && (x.Value == UserRole.Admin.ToString() || 
+                            x.Value == UserRole.MasterAdmin.ToString())) : false;
+
+                            <ul class="navbar-nav flex-grow-1">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="Index">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Index">Customer</a>
+                                </li>
+                                @if (isAdmin)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    }
+                    <ul class="navbar-nav ml-auto">
+                        @{
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Index">Change Password</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="logout">Logout</a>
+                                </li>
+                            }
+                            else
+                            {
+                                //<li class="nav-item">
+                                //    <a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="login">Forgot Password</a>
+                                //</li>
+                                //<li class="nav-item">
+                                //    <a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="login">Login</a>
+                                //</li>
+                            }
+                        }
                     </ul>
                 </div>
             </div>

@@ -1,9 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace GoldGym.Controllers
+﻿namespace GoldGym.Controllers
 {
+    using GoldGym.Models;
+    using GoldGym.Repository;
+    using Microsoft.AspNetCore.Mvc;
+
     public class ValidationController : Controller
     {
+        private readonly IUserRepository _userRepository;
+        public ValidationController(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
         [HttpPost]
         public JsonResult IsValidDateOfBirth(string dob)
         {
@@ -19,6 +27,24 @@ namespace GoldGym.Controllers
                     return Json(true);
             }
             catch (Exception)
+            {
+                return Json(msg);
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckDuplicateEmail(string email, Guid id)
+        {
+            var msg = string.Format("{0} already exists.", email);
+            try
+            {
+                UserModel? user = await _userRepository.GetUserByEmail(email, id);
+                if (user != null)
+                    return Json(msg);
+                else
+                    return Json(true);
+            }
+            catch (Exception ex)
             {
                 return Json(msg);
             }

@@ -8,18 +8,17 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    public class CustomerController : BaseController
+    public class UserController : BaseController
     {
-        private readonly ICustomerRepository _customerRepository;
-        public CustomerController(ICustomerRepository customerRepository)
+        private readonly IUserRepository _userRepository;
+        public UserController(IUserRepository userRepository)
         {
-            _customerRepository = customerRepository;
+            _userRepository = userRepository;
         }
 
-        // GET: CustomerController
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            var result = await _customerRepository.GetAllCustomers();
+            var result = await _userRepository.GetAllUsers();
             var genders = GoldStaticUtility.GetGenderList();
             foreach (var item in result)
             {
@@ -28,31 +27,23 @@
             return View(result);
         }
 
-        // GET: CustomerController/Details/5
-        public async Task<ActionResult> Details(Guid id)
-        {
-            var result = await _customerRepository.GetCustomerById(id);
-            return View(result);
-        }
-
-        // GET: CustomerController/Create
         public ActionResult Create()
         {
-            ViewBag.Genders = GoldStaticUtility.GetGenderList();
-            return View(new Customer() { Id = Guid.NewGuid() });
+            var model = new UserModel() { Id = Guid.NewGuid(), Role = UserRole.User, Gender = "M" };
+            setUpViewBags(model);
+            return View(model);
         }
 
-        // POST: CustomerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Customer model)
+        public ActionResult Create(UserModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     model.CreatedBy = this.GetLoggedInUserId();
-                    _customerRepository.CreateCustomer(model);
+                    _userRepository.CreateUser(model);
                     return RedirectToAction(nameof(Index));
                 }
                 return View(model);
@@ -63,43 +54,48 @@
             }
         }
 
-        // GET: CustomerController/Edit/5
+        private void setUpViewBags(UserModel model)
+        {
+            ViewBag.Genders = GoldStaticUtility.GetGenderList(model.Gender);
+            ViewBag.Roles = GoldStaticUtility.GetRoleList(model.Role.ToString());
+        }
+
         public async Task<ActionResult> Edit(Guid id)
         {
-            var result = await _customerRepository.GetCustomerById(id);
-            ViewBag.Genders = GoldStaticUtility.GetGenderList(result.Gender);
+            var result = await _userRepository.GetUserById(id);
+            result.ConfirmPassword = result.Password;
+            setUpViewBags(result);
             return View(result);
         }
 
-        // POST: CustomerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Customer model)
+        public async Task<ActionResult> Edit(UserModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    model.UpdatedBy = this.GetLoggedInUserId();
-                    await _customerRepository.UpdateCustomer(model);
+                    model.UpdatedBy= this.GetLoggedInUserId();
+                    await _userRepository.UpdateUser(model);
                     return RedirectToAction(nameof(Index));
                 }
+                setUpViewBags(model);
                 return View(model);
             }
-            catch(Exception ex)
+            catch
             {
                 return View();
             }
         }
 
-        // POST: CustomerController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(Guid id)
         {
             try
             {
-                await _customerRepository.DeleteCustomer(id, this.GetLoggedInUserId());
+                await _userRepository.DeleteUser(id, this.GetLoggedInUserId());
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -3,9 +3,11 @@
     using GoldGym.Data;
     using GoldGym.Models;
     using GoldGym.Repository;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    public class PaymentController : Controller
+    [Authorize]
+    public class PaymentController : BaseController
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IPaymentRepository _paymentRepository;
@@ -48,6 +50,7 @@
             {
                 model.Id = Guid.NewGuid();
                 model.PaymentDate = DateTime.Now;
+                model.CreatedBy = this.GetLoggedInUserId();
                 await _paymentRepository.CreatePayment(model);
                 return RedirectToAction(nameof(Create), new { id = model.CustomerId });
             }

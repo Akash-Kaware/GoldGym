@@ -25,25 +25,27 @@
             return result.FirstOrDefault();
         }
 
-        public Task<bool> CreateCustomer(Customer customer)
+        public async Task<bool> CreateCustomer(Customer customer)
         {
             var parameters = customer.ToDynamicParameters();
             parameters.Add("CreatedBy", customer.CreatedBy);
-            return _connection.ExecuteQueryAsync("[gold].[Customer_Create]", parameters);
+            parameters.Add("IsActive", true);
+            return await _connection.ExecuteQueryAsync("[gold].[Customer_Create]", parameters);
         }
 
-        public Task<bool> UpdateCustomer(Customer customer)
+        public async Task<bool> UpdateCustomer(Customer customer)
         {
             var parameters = customer.ToDynamicParameters();
             parameters.Add("UpdatedBy", customer.UpdatedBy);
-            return _connection.ExecuteQueryAsync("[gold].[Customer_Update]", parameters);
+            return await _connection.ExecuteQueryAsync("[gold].[Customer_Update]", parameters);
         }
 
-        public Task<bool> DeleteCustomer(Guid id)
+        public async Task<bool> DeleteCustomer(Guid id, Guid userId)
         {
             var parameters = new DynamicParameters();
             parameters.Add("Id", id);
-            return _connection.ExecuteQueryAsync("[gold].[Customer_Delete]", parameters);
+            parameters.Add("UpdatedBy", userId);
+            return await _connection.ExecuteQueryAsync("[gold].[Customer_Delete]", parameters);
         }
     }
 }

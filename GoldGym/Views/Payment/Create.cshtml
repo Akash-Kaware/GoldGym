@@ -1,7 +1,11 @@
-﻿@model GoldGym.Models.Payment
+﻿@using System.Security.Claims;
+@using GoldGym.Data;
+@model GoldGym.Models.Payment
 
 @{
     ViewData["Title"] = "Create";
+    var isAdmin = User.Claims.Any() ? User.Claims.Any(x => x.Type == ClaimTypes.Role && (x.Value == UserRole.Admin.ToString() ||
+                            x.Value == UserRole.MasterAdmin.ToString())) : false;
 }
 
 <div>
@@ -110,7 +114,10 @@
                         <th>@Html.DisplayNameFor(model => model.FromDate)</th>
                         <th>@Html.DisplayNameFor(model => model.ToDate)</th>
                         <th>@Html.DisplayNameFor(model => model.Amount)</th>
-                        <th></th>
+                        @if (isAdmin)
+                        {
+                            <th></th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -124,15 +131,18 @@
                                 <td>@Html.DisplayFor(modelItem => item.FromDate)</td>
                                 <td>@Html.DisplayFor(modelItem => item.ToDate)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-                                <td>
-                                    @using (Html.BeginForm("Delete", "Payment", new { id = item.Id, customerId = item.CustomerId }, FormMethod.Post, true,
-                            new { onsubmit = "return confirm('Are you sure you wish to delete payment - " + item.Amount + "?');" }))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        @Html.HiddenFor(model => item.Id)
-                                        <button type="submit" class="btn btn-danger btn-sm" value="Delete"><img class="svg-icon" src="~/svg/trash-solid.svg" /></button>
-                                    }
-                                </td>
+                                @if (isAdmin)
+                                {
+                                    <td>
+                                        @using (Html.BeginForm("Delete", "Payment", new { id = item.Id, customerId = item.CustomerId }, FormMethod.Post, true,
+                                        new { onsubmit = "return confirm('Are you sure you wish to delete payment - " + item.Amount + "?');" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.HiddenFor(model => item.Id)
+                                            <button type="submit" class="btn btn-danger btn-sm" value="Delete"><img class="svg-icon" src="~/svg/trash-solid.svg" /></button>
+                                        }
+                                    </td>
+                                }
                             </tr>
                             rowId++;
                         }
@@ -148,8 +158,8 @@
     }
 
     <script>
-        //$(document).ready(function () {
-        //    $('#dtExample').DataTable();
-        //});
+        $(document).ready(function () {
+            $('#dtExample').DataTable();
+        });
     </script>
 }

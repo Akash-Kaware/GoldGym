@@ -1,0 +1,76 @@
+﻿@model IEnumerable<GoldGym.Models.UserModel>
+@using System.Security.Claims;
+@using GoldGym.Data;
+
+@{
+    ViewData["Title"] = "Index";
+    var isAdmin = User.Claims.Any() ? User.Claims.Any(x => x.Type == ClaimTypes.Role && (x.Value == UserRole.Admin.ToString() ||
+                            x.Value == UserRole.MasterAdmin.ToString())) : false;
+}
+
+<h1>Gold Gym Users</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mobile1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mobile2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mobile1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mobile2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Role)
+                </td>
+                <td>                    
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info btn-sm"><img class="svg-icon" src="~/svg/pen-to-square-solid.svg" /></a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm"><img class="svg-icon" src="~/svg/eye-solid.svg" /></a>
+                </td>
+                @if (isAdmin)
+                {
+                    <td>
+                        @using (Html.BeginForm("Delete", "User", new { id = item.Id }, FormMethod.Post, true,
+                       new { onsubmit = "return confirm('Are you sure you wish to delete " + item.Name + " details?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => item.Id)
+                            <button type="submit" class="btn btn-danger btn-sm" value="Delete"><img class="svg-icon" src="~/svg/trash-solid.svg" /></button>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
