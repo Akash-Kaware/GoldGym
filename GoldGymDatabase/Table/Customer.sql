@@ -10,6 +10,7 @@
     [Mobile1] VARCHAR(20) NULL, 
     [Mobile2] VARCHAR(20) NULL, 
     [Email] VARCHAR(MAX) NULL,
+    [Photo] VARCHAR(MAX) NULL,
     [IsActive] bit NULL,
     [CreatedOn] DATETIME2 NULL DEFAULT SYSUTCDATETIME(),
     [CreatedBy] UNIQUEIDENTIFIER NULL,

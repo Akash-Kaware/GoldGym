@@ -18,6 +18,7 @@
             parameters.Add("Mobile1", customer.Mobile1);
             parameters.Add("Mobile2", customer.Mobile2);
             parameters.Add("Email", customer.Email);
+            parameters.Add("Photo", customer.Photo);
             return parameters;
         }
 

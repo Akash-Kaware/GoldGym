@@ -10,6 +10,7 @@
     @Mobile1 VARCHAR(10) NULL, 
     @Mobile2 VARCHAR(10) NULL, 
     @Email VARCHAR(MAX) NULL,
+    @Photo VARCHAR(MAX) NULL,
     @IsActive BIT NULL,
     @CreatedBy UNIQUEIDENTIFIER
 )
@@ -27,6 +28,7 @@ AS BEGIN
         [Mobile1],
         [Mobile2],
         [Email],
+        [Photo],
         [IsActive],
         [CreatedBy],
         [CreatedOn]
@@ -43,6 +45,7 @@ AS BEGIN
        @Mobile1,
        @Mobile2,
        @Email,
+       @Photo,
        @IsActive,
        @CreatedBy,
        GETDATE()

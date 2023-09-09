@@ -1,4 +1,5 @@
-﻿@model GoldGym.Models.CustomerPaymentViewModel
+﻿@using GoldGym.Data;
+@model GoldGym.Models.CustomerPaymentViewModel
 @{
     ViewData["Title"] = "Gold";
 }
@@ -11,7 +12,7 @@
 <table class="table" id="dtExample">
     <thead>
         <tr>
-            @*<th></th>*@
+            <th>Photo</th>
             <th>Name </th>
             <th>Mobile1</th>
             <th>Mobile2</th>
@@ -29,7 +30,10 @@
                 var payment = Model.Payments.OrderByDescending(x => x.ToDate).FirstOrDefault(x => x.CustomerId == customer.Id);
                 var toDate = payment?.ToDate == null ? "-" : payment.ToDate.Value.Date.ToString();
                 var expDays = payment?.ToDate == null ? 0 : (payment.ToDate.Value.Date - DateTime.Now.Date).TotalDays;
-                <tr>                    
+                <tr>
+                    <td>
+                        <img src="@ImageUploadUtil.getCustomerPhotoPath(customer.Photo)" class="rounded" alt="Cinque Terre" width="90" height="90">
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => customer.Name)
                     </td>
@@ -52,7 +56,7 @@
                         <a asp-action="Create" asp-controller="Payment" asp-route-id="@customer.Id" class="btn btn-info btn-sm"><img class="svg-icon" src="~/svg/icons8-dollar-30.png" /></a>
                     </td>
                 </tr>
-                //rowNum++; 
+                //rowNum++;
             }
         }
     </tbody>

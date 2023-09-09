@@ -10,6 +10,7 @@
     @Mobile1 VARCHAR(10) NULL, 
     @Mobile2 VARCHAR(10) NULL, 
     @Email VARCHAR(MAX) NULL,
+    @Photo VARCHAR(MAX) NULL,
     @UpdatedBy UNIQUEIDENTIFIER
 )
 AS BEGIN
@@ -25,6 +26,7 @@ AS BEGIN
         [Mobile1] = @Mobile1,
         [Mobile2] = @Mobile2,
         [Email] = @Email,
+        [Photo] = @Photo,
         [UpdatedBy] = @UpdatedBy,
         [UpdatedOn] = GETDATE()
 	WHERE

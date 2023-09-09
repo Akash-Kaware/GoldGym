@@ -13,6 +13,7 @@ AS BEGIN
         [Mobile1],
         [Mobile2],
         [Email],
+        [Photo],
         [IsActive]
     FROM [gold].[Customer] 
     WHERE [Id] NOT IN (

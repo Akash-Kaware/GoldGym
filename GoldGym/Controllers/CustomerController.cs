@@ -5,14 +5,18 @@
     using GoldGym.Repository;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
     public class CustomerController : BaseController
     {
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ICustomerRepository _customerRepository;
-        public CustomerController(ICustomerRepository customerRepository)
+        public CustomerController(IWebHostEnvironment webHostEnvironment,
+            ICustomerRepository customerRepository)
         {
+            _webHostEnvironment = webHostEnvironment;
             _customerRepository = customerRepository;
         }
 
@@ -23,7 +27,7 @@
             var genders = GoldStaticUtility.GetGenderList();
             foreach (var item in result)
             {
-                item.Gender = genders.First(g => g.Value == item.Gender.Trim()).Text;
+                item.Gender = genders.FirstOrDefault(g => g.Value == item.Gender?.Trim())?.Text;
             }
             return View(result);
         }
@@ -45,16 +49,19 @@
         // POST: CustomerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Customer model)
+        public async Task<ActionResult> Create(Customer model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    string uniqueFileName = model.Id.ToString() + "_" + model.Name?.Replace(" ", "_");
+                    model.Photo = ImageUploadUtil.UploadedFile(_webHostEnvironment.WebRootPath, model.ProfileImage, uniqueFileName);
                     model.CreatedBy = this.GetLoggedInUserId();
-                    _customerRepository.CreateCustomer(model);
+                    await _customerRepository.CreateCustomer(model);
                     return RedirectToAction(nameof(Index));
                 }
+                ViewBag.Genders = GoldStaticUtility.GetGenderList(model.Gender);
                 return View(model);
             }
             catch
@@ -80,13 +87,29 @@
             {
                 if (ModelState.IsValid)
                 {
+                    Customer existingDetails = await _customerRepository.GetCustomerById(model.Id);
+                    if (existingDetails == null)
+                    {
+                        return View(model);
+                    }
+                    if (model.ProfileImage != null)
+                    {
+                        ImageUploadUtil.DeleteFile(_webHostEnvironment.WebRootPath, existingDetails.Photo);
+                        string uniqueFileName = model.Id.ToString() + "_" + model.Name?.Replace(" ", "_");
+                        model.Photo = ImageUploadUtil.UploadedFile(_webHostEnvironment.WebRootPath, model.ProfileImage, uniqueFileName);
+                    }
+                    else
+                    {
+                        model.Photo = existingDetails.Photo;
+                    }
                     model.UpdatedBy = this.GetLoggedInUserId();
                     await _customerRepository.UpdateCustomer(model);
                     return RedirectToAction(nameof(Index));
                 }
+                ViewBag.Genders = GoldStaticUtility.GetGenderList(model.Gender);
                 return View(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View();
             }

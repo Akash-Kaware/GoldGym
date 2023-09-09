@@ -44,6 +44,13 @@
         [Required(ErrorMessage = "Please enter email Id.")]
         [EmailAddress(ErrorMessage = "Please enter valid email Id.")]
         public string? Email { get; set; }
+
+        //[Required(ErrorMessage = "Please choose profile image")]
+        [Display(Name = "Profile Picture")]
+        public IFormFile? ProfileImage { get; set; }
+
+        public string? Photo { get; set; }
+
         public bool? IsActive { get; set; }
         public DateTime? CreatedOn { get; set; }
         public Guid? CreatedBy { get; set; }

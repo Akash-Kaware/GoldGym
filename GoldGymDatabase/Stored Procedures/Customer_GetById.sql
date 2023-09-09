@@ -14,6 +14,7 @@ AS BEGIN
         [Mobile1],
         [Mobile2],
         [Email],
+        [Photo],
         [IsActive],
         [CreatedBy],
         [CreatedOn],

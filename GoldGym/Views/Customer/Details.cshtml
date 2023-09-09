@@ -1,4 +1,5 @@
-﻿@model GoldGym.Models.Customer
+﻿@using GoldGym.Data;
+@model GoldGym.Models.Customer
 
 @{
     ViewData["Title"] = "Details";
@@ -9,62 +10,69 @@
 <div>
     <h4>Customer</h4>
     <hr />
-    <dl class="row">        
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DOB)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DOB)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.City)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Pincode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Pincode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Mobile1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Mobile1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Mobile2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Mobile2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-    </dl>
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.DOB)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.DOB)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Gender)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Gender)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Address)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Address)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.City)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.City)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Pincode)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Pincode)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Mobile1)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Mobile1)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Mobile2)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Mobile2)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <img id="imagePreview" class="img-thumbnail" src="@ImageUploadUtil.getCustomerPhotoPath(Model.Photo)"/>
+        </div>
+    </div>
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new {  id = Model.Id }) |
