@@ -13,7 +13,6 @@
 
         public static string Encrypt(string clearText)
         {
-            //string EncryptionKey = "MAKV2SPBNI99212";
             byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
             using (Aes encryptor = Aes.Create())
             {
