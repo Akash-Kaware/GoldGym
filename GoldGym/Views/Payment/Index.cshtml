@@ -28,7 +28,7 @@
             foreach (var customer in Model.Customers)
             {
                 var payment = Model.Payments.OrderByDescending(x => x.ToDate).FirstOrDefault(x => x.CustomerId == customer.Id);
-                var toDate = payment?.ToDate == null ? "-" : payment.ToDate.Value.Date.ToString();
+                var toDate = payment?.ToDate == null ? "-" : payment.ToDate.Value.Date.ToShortDateString();
                 var expDays = payment?.ToDate == null ? 0 : (payment.ToDate.Value.Date - DateTime.Now.Date).TotalDays;
                 <tr>
                     <td>
