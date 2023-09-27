@@ -10,10 +10,13 @@
     [Authorize]
     public class UserController : BaseController
     {
+        private readonly MyConfiguration _configuration;
         private readonly IUserRepository _userRepository;
-        public UserController(IUserRepository userRepository)
+
+        public UserController(MyConfiguration configuration, IUserRepository userRepository)
         {
             _userRepository = userRepository;
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
@@ -76,7 +79,7 @@
             {
                 if (ModelState.IsValid)
                 {
-                    model.UpdatedBy= this.GetLoggedInUserId();
+                    model.UpdatedBy = this.GetLoggedInUserId();
                     await _userRepository.UpdateUser(model);
                     return RedirectToAction(nameof(Index));
                 }
@@ -102,6 +105,38 @@
             {
                 return View();
             }
+        }
+
+        public ActionResult ChangePassword()
+        {
+            return View(new ChangePasswordModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userdetails = await _userRepository.GetUserById(this.GetLoggedInUserId());
+                if (userdetails.Password != model.OldPassword)
+                {
+                    ViewBag.ErrorMessage = "Old password is not maching.";
+                    return View(model);
+                }
+                await _userRepository.ChangeUserPassword(model.Password, this.GetLoggedInUserId(), this.GetLoggedInUserId());
+                ViewBag.ErrorMessage = "Password changed successfully.";
+                return View();
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(Guid id)
+        {
+            await _userRepository.ChangeUserPassword(_configuration.DefaultPassword, id, this.GetLoggedInUserId());
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -10,7 +10,8 @@
         {
             builder.Services.AddSingleton<SqlDbConnection>(new SqlDbConnection(builder.Configuration.GetConnectionString("GoldConnString")));
             int? PaymentReminderDays = builder.Configuration.GetValue<int>("PaymentReminderDays");
-            builder.Services.AddSingleton<MyConfiguration>(new MyConfiguration(PaymentReminderDays));
+            string DefaultPassword = builder.Configuration.GetValue<string>("DefaultPassword");
+            builder.Services.AddSingleton<MyConfiguration>(new MyConfiguration(PaymentReminderDays, DefaultPassword));
             string? EncryptionKey = builder.Configuration.GetValue<string>("EncryptionKey");
             builder.Services.AddSingleton(new Encryption(EncryptionKey));
             builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();

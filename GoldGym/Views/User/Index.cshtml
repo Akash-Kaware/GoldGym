@@ -6,6 +6,9 @@
     ViewData["Title"] = "Index";
     var isAdmin = User.Claims.Any() ? User.Claims.Any(x => x.Type == ClaimTypes.Role && (x.Value == UserRole.Admin.ToString() ||
                             x.Value == UserRole.MasterAdmin.ToString())) : false;
+
+    var isMasterAdmin = User.Claims.Any() ? User.Claims.Any(x => x.Type == ClaimTypes.Role &&
+                            x.Value == UserRole.MasterAdmin.ToString()) : false;
 }
 
 <h1>Gold Gym Users</h1>
@@ -33,6 +36,10 @@
             </th>
             <th></th>
             <th></th>
+            @if (isMasterAdmin)
+            {
+                <th>Reset Password</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -54,7 +61,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Role)
                 </td>
-                <td>                    
+                <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info btn-sm"><img class="svg-icon" src="~/svg/pen-to-square-solid.svg" /></a> |
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm"><img class="svg-icon" src="~/svg/eye-solid.svg" /></a>
                 </td>
@@ -67,6 +74,18 @@
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(model => item.Id)
                             <button type="submit" class="btn btn-danger btn-sm" value="Delete"><img class="svg-icon" src="~/svg/trash-solid.svg" /></button>
+                        }
+                    </td>
+                }
+                @if (isMasterAdmin)
+                {
+                    <td>
+                        @using (Html.BeginForm("ResetPassword", "User", new { id = item.Id }, FormMethod.Post, true,
+                       new { onsubmit = "return confirm('Are you sure you wish to reset password of " + item.Name + " ?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => item.Id)
+                            <button type="submit" class="btn btn-primary btn-sm" value="Reset Password">Reset Password</button>
                         }
                     </td>
                 }

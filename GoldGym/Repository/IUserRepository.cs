@@ -9,6 +9,7 @@
         Task<UserModel?> GetUserByEmail(string email, Guid id);
         Task<bool> CreateUser(UserModel user);
         Task<bool> UpdateUser(UserModel user);
+        Task<bool> ChangeUserPassword(string newPassword, Guid userId, Guid updatedByUserId);
         Task<bool> DeleteUser(Guid id, Guid userId);
         Task<UserModel?> ValidateUserDetails(string email, string password);
     }

@@ -11,13 +11,22 @@
             _connection = connection;
         }
 
-        public Task<bool> CreateUser(UserModel user)
+        public async Task<bool> ChangeUserPassword(string newPassword, Guid userId, Guid updatedByUserId)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", userId);
+            parameters.Add("Password", Encryption.Encrypt(newPassword));
+            parameters.Add("UpdatedBy", updatedByUserId);
+            return await _connection.ExecuteQueryAsync("[gold].[User_ChangePassword]", parameters);
+        }
+
+        public async Task<bool> CreateUser(UserModel user)
         {
             var parameters = user.ToDynamicParameters();
             parameters.Add("Password", Encryption.Encrypt(user.Password));
             parameters.Add("IsActive", true);
             parameters.Add("CreatedBy", user.CreatedBy);
-            return _connection.ExecuteQueryAsync("[gold].[User_Create]", parameters);
+            return await _connection.ExecuteQueryAsync("[gold].[User_Create]", parameters);
         }
 
         public async Task<bool> DeleteUser(Guid id, Guid userId)
